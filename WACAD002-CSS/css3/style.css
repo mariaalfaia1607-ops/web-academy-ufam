@@ -1,0 +1,9 @@
+div {
+  height: 100px;
+  float: left;
+}
+
+div.blue   { width: 100px; background-color: blue; }
+div.yellow { width: 100px; background-color: yellow; }
+div.red    { width: 100px; background-color: red; }
+div.green  { width: 200px; background-color: green; }
