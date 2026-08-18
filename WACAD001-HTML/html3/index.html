@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estrutura Semântica HTML</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 20px auto;
+      background-color: #eef0f4;
+      padding: 10px;
+    }
+    header, nav, aside, main, article, figure, p, section, footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      padding: 20px;
+      font-size: 1.3em;
+    }
+    header  { background-color: #f26d8d; }
+    nav     { background-color: #35d19f; }
+    .wrapper { display: flex; gap: 8px; }
+    aside   { background-color: #f6cfd7; writing-mode: vertical-rl; flex: 1; }
+    main    { background-color: #bfe6fb; flex-direction: column; flex: 3; }
+    article { background-color: #5ec8f2; flex-direction: column; width: 100%; }
+    figure  { background-color: #fbe6a1; width: 100%; margin: 0 0 8px 0; }
+    p       { background-color: #f2f9a0; width: 100%; margin: 0 0 8px 0; }
+    section { background-color: #1e9fe0; width: 100%; margin: 0; }
+    footer  { background-color: #b18cf0; }
+  </style>
+</head>
+<body>
+
+  <header>header</header>
+  <nav>nav</nav>
+
+  <div class="wrapper">
+    <aside>aside</aside>
+    <main>
+      main
+      <article>
+        article
+        <figure>figure</figure>
+        <p>p</p>
+        <section>section</section>
+      </article>
+    </main>
+  </div>
+
+  <footer>footer</footer>
+
+</body>
+</html>
