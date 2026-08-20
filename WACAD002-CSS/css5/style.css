@@ -1,0 +1,35 @@
+body {
+  margin: 20px;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "red   red   blue"
+    "green purple purple"
+    "orange orange orange";
+  max-width: 700px;
+}
+
+.grid div {
+  height: 120px;
+  border-radius: 4px;
+}
+
+.red    { grid-area: red;    background-color: darkred; }
+.blue   { grid-area: blue;   background-color: darkblue; }
+.green  { grid-area: green;  background-color: darkgreen; }
+.purple { grid-area: purple; background-color: purple; }
+.orange { grid-area: orange; background-color: orange; }
+
+/* Em telas estreitas, o layout se reorganiza */
+@media (max-width: 500px) {
+  .grid {
+    grid-template-areas:
+      "red    red    red"
+      "green  green  purple"
+      "blue   orange orange";
+  }
+}
