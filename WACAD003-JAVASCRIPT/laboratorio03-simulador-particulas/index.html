@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulador de Partículas</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <h1>Simulador de Partículas</h1>
+
+    <div class="painel">
+      <label for="corTema">
+        Cor tema
+        <input type="color" id="corTema" value="#3aa0ff" />
+      </label>
+
+      <label for="quantidade">
+        Quantidade: <span id="quantidadeValor">30</span>
+        <input type="range" id="quantidade" min="5" max="120" value="30" />
+      </label>
+
+      <button id="reiniciar">Reiniciar</button>
+    </div>
+
+    <canvas></canvas>
+
+    <script src="main.js"></script>
+  </body>
+</html>
