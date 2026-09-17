@@ -120,6 +120,123 @@
     </div>
   </main>
 
+  <!-- gerenciar produtos -->
+  <main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="h4 mb-0">Gerenciar Produtos</h1>
+      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#novoProdutoModal">
+        Novo Produto
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Preço</th>
+            <th scope="col">Estoque</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Bicicleta</td>
+            <td>R$ 1.000,00</td>
+            <td>110</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Echo Dot</td>
+            <td>R$ 600,00</td>
+            <td>8</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Celular</td>
+            <td>R$ 1.500,00</td>
+            <td>10</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Umidificador</td>
+            <td>R$ 100,00</td>
+            <td class="text-danger fw-semibold">0</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal: Novo Produto -->
+  <div class="modal fade" id="novoProdutoModal" tabindex="-1" aria-labelledby="novoProdutoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="novoProdutoModalLabel">Novo Produto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <form class="needs-validation" novalidate>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="novoProdutoNome" class="form-label">Produto</label>
+              <input type="text" class="form-control" id="novoProdutoNome" required>
+              <div class="invalid-feedback">Informe o nome do produto.</div>
+            </div>
+            <div class="mb-3">
+              <label for="novoProdutoPreco" class="form-label">Preço</label>
+              <input type="text" class="form-control" id="novoProdutoPreco" required>
+              <div class="invalid-feedback">Informe o preço do produto.</div>
+            </div>
+            <div class="mb-3">
+              <label for="novoProdutoEstoque" class="form-label">Estoque</label>
+              <input type="number" class="form-control" id="novoProdutoEstoque" required>
+              <div class="invalid-feedback">Informe a quantidade em estoque.</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success w-100">Confirmar cadastro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /gerenciar produtos -->
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Validação Bootstrap para o formulário do modal "Novo Produto"
+    (() => {
+      'use strict';
+      const forms = document.querySelectorAll('.needs-validation');
+      Array.from(forms).forEach((form) => {
+        form.addEventListener('submit', (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    })();
+  </script>
 </body>
 </html>

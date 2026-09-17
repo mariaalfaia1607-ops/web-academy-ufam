@@ -1,11 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Loja WA</title>
-  </head>
-  <body>
-    <!-- login -->
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loja WA - Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+    }
+    .welcome-col {
+      background-color: #0d6efd;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- login -->
+  <div class="container-fluid vh-100">
+    <div class="row h-100">
+      <!-- Coluna esquerda: boas-vindas -->
+      <div class="col-12 col-md-5 welcome-col d-flex align-items-center justify-content-center order-2 order-md-1 py-5">
+        <h2 class="text-center px-3">Bem-vindo à WA Loja!</h2>
+      </div>
+
+      <!-- Coluna direita: formulário -->
+      <div class="col-12 col-md-7 d-flex align-items-center justify-content-center order-1 order-md-2 py-5">
+        <form class="needs-validation w-100" style="max-width: 360px;" novalidate>
+          <h1 class="h4 mb-4 text-center">Entrar</h1>
+
+          <div class="mb-3">
+            <label for="loginEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="loginEmail" required>
+            <div class="invalid-feedback">Informe um email válido.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="loginSenha" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="loginSenha" required>
+            <div class="invalid-feedback">Informe sua senha.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
+
+          <p class="text-center mb-0">
+            <a href="cadastro.html">não tenho cadastro</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /login -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (() => {
+      'use strict';
+      const forms = document.querySelectorAll('.needs-validation');
+      Array.from(forms).forEach((form) => {
+        form.addEventListener('submit', (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    })();
+  </script>
+</body>
 </html>
