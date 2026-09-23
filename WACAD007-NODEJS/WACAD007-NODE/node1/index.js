@@ -6,6 +6,24 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+// Carrega as variáveis do arquivo .env (sem precisar de nenhum pacote externo)
+function carregarEnv(caminhoEnv) {
+  if (!fs.existsSync(caminhoEnv)) return;
+
+  const linhas = fs.readFileSync(caminhoEnv, 'utf-8').split('\n');
+  linhas.forEach((linha) => {
+    const linhaLimpa = linha.trim();
+    if (!linhaLimpa || linhaLimpa.startsWith('#')) return;
+
+    const [chave, ...resto] = linhaLimpa.split('=');
+    if (chave && resto.length > 0) {
+      process.env[chave.trim()] = resto.join('=').trim();
+    }
+  });
+}
+
+carregarEnv(path.join(__dirname, '.env'));
+
 // Pega o diretório informado como parâmetro (ex: ./public/)
 // process.argv[0] = node, process.argv[1] = index.js, process.argv[2] = parâmetro
 const diretorioAlvo = process.argv[2];
@@ -16,7 +34,8 @@ if (!diretorioAlvo) {
   process.exit(1);
 }
 
-const PORT = 3333;
+// A porta agora vem do arquivo .env (variável PORT)
+const PORT = process.env.PORT || 3333;
 
 const server = http.createServer((req, res) => {
   const caminhoCompleto = path.resolve(diretorioAlvo);
