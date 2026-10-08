@@ -1,30 +1,13 @@
-// Exercício I - Parte 1 (WACAD007-NODE)
-// Servidor Web que lista os arquivos e subdiretórios de um diretório
-// informado como parâmetro na linha de comando, usando fs.readdir.
+// Exercício I - Parte 6 (WACAD007-NODE)
+// Servidor Web que lista os arquivos de um diretório como links.
+// Ao clicar em um link, mostra o conteúdo do arquivo com um link "Voltar".
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { createLink } = require('./util');
 
-// Carrega as variáveis do arquivo .env (sem precisar de nenhum pacote externo)
-function carregarEnv(caminhoEnv) {
-  if (!fs.existsSync(caminhoEnv)) return;
-
-  const linhas = fs.readFileSync(caminhoEnv, 'utf-8').split('\n');
-  linhas.forEach((linha) => {
-    const linhaLimpa = linha.trim();
-    if (!linhaLimpa || linhaLimpa.startsWith('#')) return;
-
-    const [chave, ...resto] = linhaLimpa.split('=');
-    if (chave && resto.length > 0) {
-      process.env[chave.trim()] = resto.join('=').trim();
-    }
-  });
-}
-
-carregarEnv(path.join(__dirname, '.env'));
-
-// Pega o diretório informado como parâmetro (ex: ./public/)
+// Diretório informado como parâmetro (ex: ./public/)
 // process.argv[0] = node, process.argv[1] = index.js, process.argv[2] = parâmetro
 const diretorioAlvo = process.argv[2];
 
@@ -34,42 +17,48 @@ if (!diretorioAlvo) {
   process.exit(1);
 }
 
-// A porta agora vem do arquivo .env (variável PORT)
+// A porta vem do arquivo .env.development / .env.production,
+// carregado pelo script do package.json (--env-file)
 const PORT = process.env.PORT || 3333;
+const caminhoDiretorio = path.resolve(diretorioAlvo);
+
+function escaparHtml(texto) {
+  return texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 
 const server = http.createServer((req, res) => {
-  const caminhoCompleto = path.resolve(diretorioAlvo);
+  const urlPath = decodeURIComponent(req.url.split('?')[0]);
 
-  fs.readdir(caminhoCompleto, (err, arquivos) => {
+  // Rota "/" -> um link para cada arquivo do diretório
+  if (urlPath === '/') {
+    fs.readdir(caminhoDiretorio, (err, arquivos) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end(`Erro ao ler o diretório "${diretorioAlvo}": ${err.message}`);
+        return;
+      }
+
+      const links = arquivos.map((arquivo) => createLink(arquivo)).join('');
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(links);
+    });
+    return;
+  }
+
+  // Rota "/nome-do-arquivo" -> conteúdo do arquivo + link "Voltar"
+  // path.basename impede acessar arquivos fora do diretório informado
+  const nomeArquivo = path.basename(urlPath);
+  const caminhoArquivo = path.join(caminhoDiretorio, nomeArquivo);
+
+  fs.readFile(caminhoArquivo, 'utf-8', (err, conteudo) => {
     if (err) {
-      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-      res.end(`Erro ao ler o diretório "${diretorioAlvo}": ${err.message}`);
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end('<a href="/">Voltar</a><br>\nArquivo não encontrado.');
       return;
     }
 
-    // Monta uma linha <p> para cada arquivo/subdiretório encontrado
-    const listaHtml = arquivos
-      .map((item) => `<p>${item}</p>`)
-      .join('\n      ');
-
-    const paginaHtml = `
-    <!DOCTYPE html>
-    <html lang="pt-br">
-    <head>
-      <meta charset="UTF-8">
-      <title>Conteúdo de ${diretorioAlvo}</title>
-      <style>
-        body { font-family: monospace; font-size: 1.5rem; padding: 2rem; }
-        p { margin: 0.3rem 0; }
-      </style>
-    </head>
-    <body>
-      ${listaHtml}
-    </body>
-    </html>`;
-
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(paginaHtml);
+    res.end(`<a href="/">Voltar</a><br>\n${escaparHtml(conteudo)}`);
   });
 });
 
