@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Cliente {
+  id_cliente    Int        @id @default(autoincrement())
+  nome          String     @db.VarChar(100)
+  cpf           String     @unique @db.Char(11)
+  celular       String?    @db.VarChar(20)
+  email         String     @unique @db.VarChar(120)
+  d_nascimento  DateTime?  @db.Date
+
+  enderecos     Endereco[]
+  compras       Compra[]
+
+  @@map("cliente")
+}
+
+model Endereco {
+  id_endereco  Int      @id @default(autoincrement())
+  id_cliente   Int
+  rua          String   @db.VarChar(120)
+  numero       String   @db.VarChar(10)
+  complemento  String?  @db.VarChar(60)
+  bairro       String   @db.VarChar(60)
+  cidade       String   @db.VarChar(60)
+  estado       String   @db.Char(2)
+  cep          String   @db.Char(8)
+
+  cliente      Cliente  @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade)
+  compras      Compra[]
+
+  @@index([id_cliente])
+  @@map("endereco")
+}
+
+model Categoria {
+  id_categoria  Int            @id @default(autoincrement())
+  nome          String         @unique @db.VarChar(60)
+
+  subcategorias Subcategoria[]
+
+  @@map("categoria")
+}
+
+model Subcategoria {
+  id_subcategoria  Int        @id @default(autoincrement())
+  id_categoria     Int
+  nome             String     @db.VarChar(60)
+  descricao        String?    @db.VarChar(255)
+
+  categoria        Categoria  @relation(fields: [id_categoria], references: [id_categoria])
+  produtos         Produto[]
+
+  @@index([id_categoria])
+  @@map("subcategoria")
+}
+
+model Fabricante {
+  id_fabricante  Int        @id @default(autoincrement())
+  nome           String     @db.VarChar(100)
+  cnpj           String     @unique @db.Char(14)
+
+  produtos       Produto[]
+
+  @@map("fabricante")
+}
+
+model Produto {
+  id_produto       Int                   @id @default(autoincrement())
+  id_subcategoria  Int
+  id_fabricante    Int
+  modelo           String                @db.VarChar(100)
+  preco_base       Decimal               @db.Decimal(10, 2)
+  qtd_disponivel   Int                   @default(0)
+
+  subcategoria     Subcategoria          @relation(fields: [id_subcategoria], references: [id_subcategoria])
+  fabricante       Fabricante            @relation(fields: [id_fabricante], references: [id_fabricante])
+  numeros_serie    ProdutoNumeroSerie[]
+  itens            ItemCompra[]
+
+  @@index([id_subcategoria])
+  @@index([id_fabricante])
+  @@map("produto")
+}
+
+// Atributo multivalorado "numero_serie" -> relação própria, PK composta
+model ProdutoNumeroSerie {
+  id_produto    Int
+  numero_serie  String   @db.VarChar(60)
+
+  produto       Produto  @relation(fields: [id_produto], references: [id_produto], onDelete: Cascade)
+
+  @@id([id_produto, numero_serie])
+  @@map("produto_numero_serie")
+}
+
+model Compra {
+  id_compra        Int          @id @default(autoincrement())
+  id_cliente       Int
+  id_endereco      Int
+  data_hora        DateTime     @default(now())
+  desconto         Decimal      @default(0) @db.Decimal(10, 2)
+  forma_pagamento  String       @db.VarChar(30)
+  total            Decimal      @db.Decimal(10, 2)
+
+  cliente          Cliente      @relation(fields: [id_cliente], references: [id_cliente])
+  endereco         Endereco     @relation(fields: [id_endereco], references: [id_endereco])
+  itens            ItemCompra[]
+
+  @@index([id_cliente])
+  @@index([id_endereco])
+  @@map("compra")
+}
+
+model ItemCompra {
+  id_item         Int      @id @default(autoincrement())
+  id_compra       Int
+  id_produto      Int
+  quantidade      Int
+  preco_unitario  Decimal  @db.Decimal(10, 2)
+
+  compra          Compra   @relation(fields: [id_compra], references: [id_compra], onDelete: Cascade)
+  produto         Produto  @relation(fields: [id_produto], references: [id_produto])
+
+  // evita duplicatas do mesmo produto na mesma compra
+  @@unique([id_compra, id_produto])
+  @@index([id_produto])
+  @@map("item_compra")
+}

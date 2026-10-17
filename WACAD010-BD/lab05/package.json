@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^18.0.8"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "@types/node": "^26.6.5",
+    "prisma": "^6.19.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
